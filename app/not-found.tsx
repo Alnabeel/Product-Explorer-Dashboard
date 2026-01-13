@@ -1,10 +1,13 @@
-import Link from 'next/link';
 import Header from '@/components/layout/Header';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Suspense fallback={<div className="h-20" />}>
+        <Header />
+      </Suspense>
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
