@@ -13,7 +13,7 @@ export default function ProductGrid({
 }: ProductGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
         {Array.from({ length: 8 }).map((_, index) => (
           <LoadingSkeleton key={index} />
         ))}
@@ -23,10 +23,10 @@ export default function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="text-center py-16">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+      <div className="text-center py-20">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 mb-6">
           <svg
-            className="w-8 h-8 text-gray-400 dark:text-gray-500"
+            className="w-10 h-10 text-gray-400 dark:text-gray-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -39,10 +39,10 @@ export default function ProductGrid({
             />
           </svg>
         </div>
-        <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">
-          No products found.
+        <p className="text-gray-600 dark:text-gray-400 text-lg font-semibold mb-2">
+          No products found
         </p>
-        <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
+        <p className="text-gray-400 dark:text-gray-500 text-sm">
           Try adjusting your search or filters
         </p>
       </div>
@@ -50,7 +50,7 @@ export default function ProductGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

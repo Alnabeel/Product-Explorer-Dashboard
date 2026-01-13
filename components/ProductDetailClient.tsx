@@ -120,7 +120,7 @@ export default function ProductDetailClient({
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-5xl font-bold text-gray-900 dark:text-white">
-                  ${product.price.toFixed(2)}
+                  ₹{product.price.toFixed(2)}
                 </span>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">

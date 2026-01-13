@@ -77,15 +77,18 @@ export default function ProductListingClient() {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+    <div className="space-y-10 animate-in fade-in duration-700">
+      {/* Section Header */}
+      <div className="text-center lg:text-left">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-3">
           Discover Products
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          Browse our collection and find your favorites
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+          Browse our curated collection and find your perfect match
         </p>
       </div>
+
+      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
@@ -100,6 +103,15 @@ export default function ProductListingClient() {
           onChange={setShowFavoritesOnly}
         />
       </div>
+
+      {/* Results Count */}
+      {!isLoading && (
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
+        </div>
+      )}
+
+      {/* Product Grid */}
       <ProductGrid products={filteredProducts} isLoading={isLoading} />
     </div>
   );
