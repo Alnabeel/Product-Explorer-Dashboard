@@ -12,7 +12,9 @@ export default function FavoritesFilter({
   return (
     <button
       onClick={() => onChange(!showFavoritesOnly)}
-      className={`px-5 py-3.5 border rounded-xl transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md text-sm font-medium ${
+      aria-label={showFavoritesOnly ? 'Show all products' : 'Show favorites only'}
+      aria-pressed={showFavoritesOnly}
+      className={`px-5 py-3.5 border rounded-xl transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 ${
         showFavoritesOnly
           ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30'
           : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'

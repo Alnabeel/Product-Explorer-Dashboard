@@ -65,9 +65,14 @@ export default function Header() {
           {/* Search Bar */}
           <div className="hidden md:flex flex-1 max-w-2xl mx-8">
             <div className="relative w-full">
+              <label htmlFor="header-search" className="sr-only">
+                Search products
+              </label>
               <input
-                type="text"
+                id="header-search"
+                type="search"
                 placeholder="Search products..."
+                aria-label="Search products"
                 className="w-full px-5 py-3 pl-12 pr-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20 focus:border-indigo-300 dark:focus:border-indigo-600 transition-all duration-200 text-sm"
               />
               <svg
@@ -75,6 +80,7 @@ export default function Header() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -131,8 +137,9 @@ export default function Header() {
 
             {/* Cart Icon */}
             <button
-              className="relative p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-all duration-200 hover:scale-105 active:scale-95"
-              aria-label="Shopping cart"
+              className="relative p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:ring-offset-2"
+              aria-label={`Shopping cart${cartCount > 0 ? ` with ${cartCount} item${cartCount !== 1 ? 's' : ''}` : ''}`}
+              aria-live="polite"
             >
               <svg
                 className="w-5 h-5"
@@ -148,7 +155,7 @@ export default function Header() {
                 />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-semibold rounded-full flex items-center justify-center shadow-lg">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-semibold rounded-full flex items-center justify-center shadow-lg" aria-hidden="true">
                   {cartCount}
                 </span>
               )}
@@ -156,7 +163,7 @@ export default function Header() {
 
             {/* User Profile */}
             <button
-              className="p-2.5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-indigo-500/30"
+              className="p-2.5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               aria-label="User profile"
             >
               <svg

@@ -29,6 +29,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     router.push(`/products/${product.id}`);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsAddingToCart(true);
@@ -104,9 +111,13 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div
+    <article
       onClick={handleCardClick}
-      className="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl hover:shadow-gray-200/50 dark:hover:shadow-gray-900/50 transition-all duration-500 cursor-pointer flex flex-col transform hover:-translate-y-1"
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-label={`View ${product.title} - ₹${product.price.toFixed(2)}`}
+      className="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl hover:shadow-gray-200/50 dark:hover:shadow-gray-900/50 transition-all duration-500 cursor-pointer flex flex-col transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:ring-offset-2"
     >
       {/* Image Container */}
       <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
@@ -171,7 +182,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           <button
             onClick={handleAddToCart}
             disabled={isAddingToCart}
-            className={`w-full py-3.5 px-4 rounded-xl font-semibold text-sm transition-all duration-300 transform ${
+            aria-label={`Add ${product.title} to cart`}
+            aria-disabled={isAddingToCart}
+            className={`w-full py-3.5 px-4 rounded-xl font-semibold text-sm transition-all duration-300 transform focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 ${
               isAddingToCart
                 ? 'bg-indigo-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98]'
@@ -222,6 +235,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

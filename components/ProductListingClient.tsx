@@ -6,6 +6,7 @@ import ProductGrid from '@/components/ui/ProductGrid';
 import SearchBar from '@/components/ui/SearchBar';
 import CategoryFilter from '@/components/ui/CategoryFilter';
 import FavoritesFilter from '@/components/ui/FavoritesFilter';
+import SortFilter, { SortOption } from '@/components/ui/SortFilter';
 import { getFavorites } from '@/lib/favorites';
 import { fetchProductsClient, fetchCategoriesClient } from '@/lib/api';
 import ErrorState from '@/components/ErrorState';
@@ -16,6 +17,7 @@ export default function ProductListingClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>('default');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +45,7 @@ export default function ProductListingClient() {
     loadData();
   }, []);
 
-  const filteredProducts = useMemo(() => {
+  const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
 
     // Filter by search query
@@ -69,8 +71,16 @@ export default function ProductListingClient() {
       );
     }
 
-    return filtered;
-  }, [products, searchQuery, selectedCategory, showFavoritesOnly]);
+    // Sort products
+    const sorted = [...filtered];
+    if (sortBy === 'price-low') {
+      sorted.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-high') {
+      sorted.sort((a, b) => b.price - a.price);
+    }
+
+    return sorted;
+  }, [products, searchQuery, selectedCategory, showFavoritesOnly, sortBy]);
 
   if (error) {
     return <ErrorState message={error} />;
@@ -89,7 +99,7 @@ export default function ProductListingClient() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4" role="search" aria-label="Product filters">
         <div className="flex-1">
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
         </div>
@@ -98,6 +108,7 @@ export default function ProductListingClient() {
           selectedCategory={selectedCategory}
           onChange={setSelectedCategory}
         />
+        <SortFilter sortBy={sortBy} onChange={setSortBy} />
         <FavoritesFilter
           showFavoritesOnly={showFavoritesOnly}
           onChange={setShowFavoritesOnly}
@@ -106,13 +117,13 @@ export default function ProductListingClient() {
 
       {/* Results Count */}
       {!isLoading && (
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
+        <div className="text-sm text-gray-500 dark:text-gray-400" role="status" aria-live="polite">
+          Showing {filteredAndSortedProducts.length} product{filteredAndSortedProducts.length !== 1 ? 's' : ''}
         </div>
       )}
 
       {/* Product Grid */}
-      <ProductGrid products={filteredProducts} isLoading={isLoading} />
+      <ProductGrid products={filteredAndSortedProducts} isLoading={isLoading} />
     </div>
   );
 }

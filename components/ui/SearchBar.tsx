@@ -8,11 +8,16 @@ interface SearchBarProps {
 export default function SearchBar({ value, onChange }: SearchBarProps) {
   return (
     <div className="relative">
+      <label htmlFor="search-input" className="sr-only">
+        Search products
+      </label>
       <input
-        type="text"
+        id="search-input"
+        type="search"
         placeholder="Search products..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        aria-label="Search products"
         className="w-full px-5 py-3.5 pl-12 pr-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20 focus:border-indigo-300 dark:focus:border-indigo-600 transition-all duration-200 shadow-sm hover:shadow-md text-sm"
       />
       <svg
@@ -20,6 +25,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"

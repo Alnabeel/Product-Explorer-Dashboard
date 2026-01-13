@@ -75,7 +75,8 @@ export default function ProductDetailClient({
     <div className="max-w-5xl mx-auto">
       <button
         onClick={() => router.back()}
-        className="mb-8 flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-medium group"
+        aria-label="Go back to products"
+        className="mb-8 flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-medium group focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:ring-offset-2 rounded-lg px-2 py-1"
       >
         <svg
           className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform"
@@ -125,10 +126,11 @@ export default function ProductDetailClient({
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-1">
-                  <svg
-                    className="w-5 h-5 text-yellow-400 fill-current"
-                    viewBox="0 0 20 20"
-                  >
+              <svg
+                className="w-5 h-5 text-yellow-400 fill-current"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
                     <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                   </svg>
                   <span className="font-medium">{product.rating.rate}</span>
@@ -144,7 +146,9 @@ export default function ProductDetailClient({
 
             <button
               onClick={handleFavoriteClick}
-              className={`mt-auto px-6 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 shadow-md hover:shadow-lg ${
+              aria-label={favorited ? `Remove ${product.title} from favorites` : `Add ${product.title} to favorites`}
+              aria-pressed={favorited}
+              className={`mt-auto px-6 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 ${
                 favorited
                   ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-2 border-red-300 dark:border-red-700 hover:bg-red-100 dark:hover:bg-red-900/30'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
