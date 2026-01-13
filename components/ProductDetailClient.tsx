@@ -1,29 +1,75 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { Product } from '@/types/product';
+import ErrorState from '@/components/ErrorState';
+import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
+import { fetchProductClient } from '@/lib/api';
 import { isFavorite, toggleFavorite } from '@/lib/favorites';
+import { Product } from '@/types/product';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface ProductDetailClientProps {
-  product: Product;
+  productId: number;
 }
 
 export default function ProductDetailClient({
-  product,
+  productId,
 }: ProductDetailClientProps) {
   const router = useRouter();
+  const [product, setProduct] = useState<Product | null>(null);
   const [favorited, setFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setFavorited(isFavorite(product.id));
-  }, [product.id]);
+    async function loadProduct() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const productData = await fetchProductClient(productId);
+        setProduct(productData);
+        setFavorited(isFavorite(productData.id));
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to load product';
+        setError(errorMessage);
+        console.error('Error loading product:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadProduct();
+  }, [productId]);
 
   const handleFavoriteClick = () => {
+    if (!product) return;
     toggleFavorite(product.id);
     setFavorited(isFavorite(product.id));
   };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-xl">
+          <div className="grid md:grid-cols-2 gap-8 p-6 md:p-10">
+            <LoadingSkeleton />
+            <div className="space-y-4">
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse" />
+              <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded w-full animate-pulse" />
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-32 animate-pulse" />
+              <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded w-full animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return <ErrorState message={error || 'Product not found'} />;
+  }
 
   return (
     <div className="max-w-5xl mx-auto">

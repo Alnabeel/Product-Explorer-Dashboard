@@ -1,4 +1,4 @@
-import { Product, Category } from '@/types/product';
+import { Category, Product } from '@/types/product';
 
 const API_BASE_URL = 'https://fakestoreapi.com';
 
@@ -92,6 +92,85 @@ export async function fetchCategories(): Promise<Category[]> {
     return data;
   } catch (error) {
     // Categories are optional, so return empty array on any error
+    console.warn('Error fetching categories, returning empty array:', error);
+    return [];
+  }
+}
+
+// Client-side fetch functions (for use in browser - no Next.js caching)
+export async function fetchProductsClient(): Promise<Product[]> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    const response = await fetch(`${API_BASE_URL}/products`, {
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
+    }
+
+    const data: Product[] = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timeout: API took too long to respond. Please try again.');
+    }
+    console.error('Error fetching products:', error);
+    throw error;
+  }
+}
+
+export async function fetchProductClient(id: number): Promise<Product> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Product not found');
+      }
+      throw new Error(`Failed to fetch product: ${response.status} ${response.statusText}`);
+    }
+
+    const data: Product = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching product ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function fetchCategoriesClient(): Promise<Category[]> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    const response = await fetch(`${API_BASE_URL}/products/categories`, {
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch categories: ${response.status} ${response.statusText}`);
+    }
+
+    const data: Category[] = await response.json();
+    return data;
+  } catch (error) {
     console.warn('Error fetching categories, returning empty array:', error);
     return [];
   }
