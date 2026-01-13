@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Product } from '@/types/product';
 import { isFavorite, toggleFavorite } from '@/lib/favorites';
 
@@ -48,11 +49,14 @@ export default function ProductDetailClient({
 
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-xl">
         <div className="grid md:grid-cols-2 gap-8 p-6 md:p-10">
-          <div className="bg-gray-50 dark:bg-gray-900 rounded-xl aspect-square flex items-center justify-center p-8 shadow-inner">
-            <img
+          <div className="bg-gray-50 dark:bg-gray-900 rounded-xl aspect-square shadow-inner relative p-8">
+            <Image
               src={product.image}
               alt={product.title}
-              className="max-w-full max-h-full object-contain"
+              fill
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              unoptimized
             />
           </div>
 

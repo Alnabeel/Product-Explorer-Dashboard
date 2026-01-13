@@ -3,6 +3,7 @@
 import { Product } from '@/types/product';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { isFavorite, toggleFavorite } from '@/lib/favorites';
 
 interface ProductCardProps {
@@ -32,11 +33,14 @@ export default function ProductCard({ product }: ProductCardProps) {
       onClick={handleCardClick}
       className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group"
     >
-      <div className="relative aspect-square bg-gray-50 dark:bg-gray-900 overflow-hidden">
-        <img
+      <div className="relative aspect-square bg-gray-50 dark:bg-gray-900 overflow-hidden p-4">
+        <Image
           src={product.image}
           alt={product.title}
-          className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+          fill
+          className="object-contain group-hover:scale-105 transition-transform duration-300"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          unoptimized
         />
         <button
           onClick={handleFavoriteClick}

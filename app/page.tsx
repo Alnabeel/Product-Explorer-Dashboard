@@ -3,13 +3,16 @@ import Header from '@/components/layout/Header';
 import ProductListingClient from '@/components/ProductListingClient';
 import ErrorState from '@/components/ErrorState';
 
+// Force dynamic rendering to ensure fresh data on Vercel
+export const dynamic = 'force-dynamic';
+export const revalidate = 60; // Revalidate every 60 seconds
+
 async function getProducts() {
   try {
     return await fetchProducts();
   } catch (error) {
-    // Return empty array during build if API fails
-    console.warn('Error fetching products, returning empty array:', error);
-    return [];
+    console.error('Error fetching products:', error);
+    throw error; // Let the error propagate so ErrorState can show it
   }
 }
 
@@ -18,7 +21,7 @@ async function getCategories() {
     return await fetchCategories();
   } catch (error) {
     console.warn('Error fetching categories, returning empty array:', error);
-    return [];
+    return []; // Categories are optional, so return empty array
   }
 }
 
