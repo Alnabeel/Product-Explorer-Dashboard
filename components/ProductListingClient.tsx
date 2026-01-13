@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Product, Category } from '@/types/product';
 import ProductGrid from '@/components/ui/ProductGrid';
 import SearchBar from '@/components/ui/SearchBar';
@@ -12,9 +13,11 @@ import { fetchProductsClient, fetchCategoriesClient } from '@/lib/api';
 import ErrorState from '@/components/ErrorState';
 
 export default function ProductListingClient() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('default');
@@ -44,6 +47,25 @@ export default function ProductListingClient() {
 
     loadData();
   }, []);
+
+  // Sync search query with URL params on mount and when URL changes
+  useEffect(() => {
+    const query = searchParams.get('search') || '';
+    setSearchQuery(query);
+  }, [searchParams]);
+
+  // Update URL when search query changes
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    const params = new URLSearchParams(searchParams.toString());
+    if (value.trim()) {
+      params.set('search', value);
+    } else {
+      params.delete('search');
+    }
+    const newUrl = params.toString() ? `/?${params.toString()}` : '/';
+    router.replace(newUrl, { scroll: false });
+  };
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
@@ -101,7 +123,7 @@ export default function ProductListingClient() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4" role="search" aria-label="Product filters">
         <div className="flex-1">
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          <SearchBar value={searchQuery} onChange={handleSearchChange} />
         </div>
         <CategoryFilter
           categories={categories}

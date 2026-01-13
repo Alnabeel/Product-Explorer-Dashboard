@@ -2,12 +2,17 @@
 
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -35,6 +40,43 @@ export default function Header() {
       window.removeEventListener('cartUpdated', updateCartCount);
     };
   }, []);
+
+  // Sync search query with URL params
+  useEffect(() => {
+    const query = searchParams.get('search') || '';
+    setSearchQuery(query);
+  }, [searchParams]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    // Update URL params - navigate to home page with search query
+    const params = new URLSearchParams();
+    if (value.trim()) {
+      params.set('search', value);
+    }
+    const newUrl = params.toString() ? `/?${params.toString()}` : '/';
+    
+    // If already on home page, replace URL to avoid history clutter
+    // Otherwise, push to navigate to home page
+    if (pathname === '/') {
+      router.replace(newUrl, { scroll: false });
+    } else {
+      router.push(newUrl);
+    }
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Navigate to home page with search query
+    const params = new URLSearchParams();
+    if (searchQuery.trim()) {
+      params.set('search', searchQuery);
+    }
+    const newUrl = params.toString() ? `/?${params.toString()}` : '/';
+    
+    // Always push on submit to ensure navigation
+    router.push(newUrl);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 shadow-sm">
@@ -64,7 +106,7 @@ export default function Header() {
 
           {/* Search Bar */}
           <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-            <div className="relative w-full">
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
               <label htmlFor="header-search" className="sr-only">
                 Search products
               </label>
@@ -73,10 +115,12 @@ export default function Header() {
                 type="search"
                 placeholder="Search products..."
                 aria-label="Search products"
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full px-5 py-3 pl-12 pr-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20 focus:border-indigo-300 dark:focus:border-indigo-600 transition-all duration-200 text-sm"
               />
               <svg
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -89,7 +133,7 @@ export default function Header() {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-            </div>
+            </form>
           </div>
 
           {/* Right Side Actions */}
