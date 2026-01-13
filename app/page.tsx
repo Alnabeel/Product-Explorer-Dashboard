@@ -7,8 +7,9 @@ async function getProducts() {
   try {
     return await fetchProducts();
   } catch (error) {
-    console.error('Error fetching products:', error);
-    throw error;
+    // Return empty array during build if API fails
+    console.warn('Error fetching products, returning empty array:', error);
+    return [];
   }
 }
 
@@ -16,7 +17,7 @@ async function getCategories() {
   try {
     return await fetchCategories();
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    console.warn('Error fetching categories, returning empty array:', error);
     return [];
   }
 }
