@@ -30,21 +30,25 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer flex flex-col"
+      className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group"
     >
-      <div className="relative aspect-square bg-gray-100">
+      <div className="relative aspect-square bg-gray-50 dark:bg-gray-900 overflow-hidden">
         <img
           src={product.image}
           alt={product.title}
-          className="w-full h-full object-contain p-4"
+          className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
         />
         <button
           onClick={handleFavoriteClick}
-          className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
+          className="absolute top-3 right-3 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-110"
           aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
         >
           <svg
-            className={`w-5 h-5 ${favorited ? 'fill-red-500 text-red-500' : 'fill-none text-gray-400'}`}
+            className={`w-5 h-5 transition-colors ${
+              favorited
+                ? 'fill-red-500 text-red-500'
+                : 'fill-none text-gray-400 dark:text-gray-500'
+            }`}
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth="2"
@@ -57,12 +61,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           </svg>
         </button>
       </div>
-      <div className="p-4 flex-1 flex flex-col">
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+      <div className="p-5 flex-1 flex flex-col">
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 text-base">
           {product.title}
         </h3>
-        <p className="text-sm text-gray-500 mb-2">{product.category}</p>
-        <p className="text-lg font-bold text-gray-900 mt-auto">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 capitalize">
+          {product.category}
+        </p>
+        <p className="text-xl font-bold text-gray-900 dark:text-white mt-auto">
           ${product.price.toFixed(2)}
         </p>
       </div>

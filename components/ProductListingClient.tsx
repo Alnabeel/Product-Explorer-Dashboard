@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Product, Category } from '@/types/product';
 import ProductGrid from '@/components/ui/ProductGrid';
 import SearchBar from '@/components/ui/SearchBar';
@@ -20,6 +20,15 @@ export default function ProductListingClient({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading state for better UX
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [initialProducts]);
 
   const filteredProducts = useMemo(() => {
     let filtered = initialProducts;
@@ -51,7 +60,15 @@ export default function ProductListingClient({
   }, [initialProducts, searchQuery, selectedCategory, showFavoritesOnly]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Discover Products
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          Browse our collection and find your favorites
+        </p>
+      </div>
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
@@ -66,7 +83,7 @@ export default function ProductListingClient({
           onChange={setShowFavoritesOnly}
         />
       </div>
-      <ProductGrid products={filteredProducts} />
+      <ProductGrid products={filteredProducts} isLoading={isLoading} />
     </div>
   );
 }

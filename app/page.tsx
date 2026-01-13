@@ -29,7 +29,7 @@ export default async function HomePage() {
     ]);
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <ProductListingClient
@@ -43,7 +43,7 @@ export default async function HomePage() {
     const errorMessage =
       error instanceof Error ? error.message : 'Failed to load products';
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <ErrorState message={errorMessage} />
