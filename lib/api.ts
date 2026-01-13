@@ -11,9 +11,12 @@ export async function fetchProducts(): Promise<Product[]> {
     const response = await fetch(`${API_BASE_URL}/products`, {
       next: { revalidate: 60 },
       signal: controller.signal,
-      // Add headers for better compatibility
+      // Add headers to mimic browser requests and avoid 403 errors
       headers: {
         'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'application/json',
+        'Accept-Language': 'en-US,en;q=0.9',
       },
     });
 
@@ -39,6 +42,12 @@ export async function fetchProduct(id: number): Promise<Product> {
   try {
     const response = await fetch(`${API_BASE_URL}/products/${id}`, {
       next: { revalidate: 60 },
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'application/json',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     });
 
     if (!response.ok) {
@@ -67,6 +76,9 @@ export async function fetchCategories(): Promise<Category[]> {
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'application/json',
+        'Accept-Language': 'en-US,en;q=0.9',
       },
     });
 
